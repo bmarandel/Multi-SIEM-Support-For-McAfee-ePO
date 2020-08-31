@@ -1,0 +1,11 @@
+<list id="1">
+  <query id="2">
+    <dictionary id="3"/>
+    <name>ENS Threat Events generated within the last full hour</name>
+    <description>Threat Events with target file hash generated within the last full hour.</description>
+    <target>EPOEvents</target>
+    <table-uri>query:table?orion.table.order=asc&amp;orion.table.columns=EPOEvents.ThreatActionTaken%3AEPOEvents.AgentGUID%3AEPOEvents.AnalyzerDetectionMethod%3AEPOEvents.AnalyzerDATVersion%3AEPOEvents.Analyzer%3AEPOEvents.AnalyzerHostName%3AEPOEvents.AnalyzerIPV6%3AEPOEvents.AnalyzerIPV4%3AEPOEvents.AnalyzerMAC%3AEPOEvents.AnalyzerName%3AEPOEvents.AnalyzerVersion%3AEPOEvents.AnalyzerEngineVersion%3AEPOEvents.ThreatCategory%3AEPOEvents.DetectedUTC%3AEPOEvents.ThreatEventID%3AEPOEvents.ReceivedUTC%3AEPOEvents.EventTimeLocal%3AEPOEvents.ServerID%3AEPOEvents.ThreatHandled%3AEPOEvents.ThreatName%3AEPOEvents.ThreatSeverity%3AEPOEvents.SourceHostName%3AEPOEvents.SourceIPV6%3AEPOEvents.SourceIPV4%3AEPOEvents.SourceMAC%3AEPOEvents.SourceProcessName%3AEPOEvents.SourceURL%3AEPOEvents.SourceUserName%3AEPOEvents.TargetFileName%3AEPOEvents.TargetHostName%3AEPOEvents.TargetIPV6%3AEPOEvents.TargetIPV4%3AEPOEvents.TargetMAC%3AEPOEvents.TargetProtocol%3AEPOEvents.TargetPort%3AEPOEvents.TargetProcessName%3AEPOEvents.TargetUserName%3AEPOEvents.ThreatType%3AEPExtendedEvent.TargetHash%3AEPOBranchNode.NodeTextPath2&amp;orion.table.order.by=EPOEvents.DetectedUTC</table-uri>
+    <condition-uri>query:condition?orion.condition.sexp=%28+where+%28+newerThanFull+EPOEvents.ReceivedUTC+3600000++%29+%29</condition-uri>
+    <summary-uri>query:summary?orion.query.type=table.table&amp;orion.sum.query=false</summary-uri>
+  </query>
+</list>
