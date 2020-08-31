@@ -6,7 +6,7 @@ The purpose of this project is to propose a solution for enterprises which use a
 While most of SIEM are establishing a direct connection to ePO or its database or while ePO can redirect all events to a Syslog receiver, it forces each subsidaries to get a view/access to logs from all subsidaries.
 I'm proposing a "Pull Request" approach through ePO WebAPI based on ePO User Account to filter/limit log access to only the scope that each subsidaries is participating/acting to.
 
-TO DO: Include a graphic to illustrate the current concept.
+TO DO: Include a graphic to illustrate the current concept
 
 ## Designing the Threat Event query
 As a standard approach, you can decide to start with all the column available from the Threat Events table of the ePO's database. That's will be the easiest point to start as most of SIEM are simply grabbing events from this table. Also, this is exactly what McAfee decided to offer for his "Pull Events" API from the SaaS version of ePolicy Orchestrator, aka MVISION ePO. (Please read the following [documentation page](https://docs.mcafee.com/bundle/mvision-epolicy-orchestrator-product-guide/page/GUID-26C1A6F2-DEB6-48B6-80D6-509649C356BC.html) for more information about this service.)
