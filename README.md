@@ -19,10 +19,9 @@ Select "Threat Events" as the source for the query, then click "Next".
 Choose the table "Chart Type", then click "Next".
 
 ![](./img/epo-create-query-03.png)
-Then add all columns available from Threat Events. I like to add also the Assignement Path in this query because based on the ePO System Tree, the location of the system within the tree could definitely helps to understand the event or identify the targeted system.<br>
-Here is the list of all columns used in my query:
+Then add all columns available from Threat Events. I like to add also the Assignement Path in this query because based on the ePO System Tree, the location of the system within the tree could definitely helps to understand the event or identify the targeted system.
 
-| Included columns                                               ||
+| Included columns in the query:                                             |||
 | ----------------------- | ----------------- | ----------------- |
 | ThreatActionTaken       | DetectedUTC       | SourceURL         |
 | AgentGUID               | ThreatEventID     | SourceUserName    |
