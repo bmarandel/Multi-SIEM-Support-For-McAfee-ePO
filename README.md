@@ -22,6 +22,7 @@ Choose the table "Chart Type", then click "Next".
 Then add all columns available from Threat Events. I like to add also the Assignement Path in this query because based on the ePO System Tree, the location of the system within the tree could definitely helps to understand the event or identify the targeted system.<br>
 Here is the list of all columns used in my query:
 
+| Included columns                                               ||
 | ----------------------- | ----------------- | ----------------- |
 | ThreatActionTaken       | DetectedUTC       | SourceURL         |
 | AgentGUID               | ThreatEventID     | SourceUserName    |
