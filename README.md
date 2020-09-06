@@ -6,12 +6,11 @@ The purpose of this project is to propose a solution for enterprises that use a 
 I'm proposing a "Pull Request" approach through ePO WebAPI based on ePO User Account to filter/limit log access to only the scope that each subsidiary is participating/acting to.
 
 ![](./img/epo-management.png)
-TO DO: Include a graphic to illustrate the current concept
 
 ## Designing the Threat Event query
 As a standard approach, you can decide to start with all the columns available from the Threat Events table of the ePO database. It will be the best point to start as most SIEM are simply grabbing events from this table. Also, this is what McAfee decided to offer for his "Pull Events" API from the SaaS version of ePolicy Orchestrator, aka MVISION ePO. (Please read the following [documentation page](https://docs.mcafee.com/bundle/mvision-epolicy-orchestrator-product-guide/page/GUID-26C1A6F2-DEB6-48B6-80D6-509649C356BC.html) for more information about this service.)
 
-If you don't want to import my query ("query-threat-events.xml"), you can build your own. From ePO console menu -> Queries & Reports, click "New Query".
+If you don't want to import my query "[query-threat-events.xml](./query-threat-events.xml)", you can build your own. From ePO console menu -> Queries & Reports, click "New Query".
 
 ![](./img/epo-create-query-01.png)
 Select "Threat Events" as the source for the query, then click "Next".
@@ -47,7 +46,7 @@ You can adapt the filter based on your needs (i.e: last 5 minutes or last day.) 
 ![](./img/epo-create-query-05.png)
 Enter the name and description you want for this query and click "Save".
 <br>
-I also built another query where I  added the "Targeted File Hash' reported in the case of the ENS detection. Feel free to add any columns that could add value to your SIEM based on your needs. Then I decided to save those queries in a "Shared Group" that I plan to use in a dedicated Permission Set.
+I also built another query "[query-ens-threat-events.xml](./query-ens-threat-events.xml)" where I  added the "Targeted File Hash' reported in the case of the ENS detection. Feel free to add any columns that could add value to your SIEM based on your needs. Then I decided to save those queries in a "Shared Group" that I plan to use in a dedicated Permission Set.
 
 ![](./img/epo-shared-queries.png)
 
