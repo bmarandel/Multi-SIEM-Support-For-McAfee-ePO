@@ -5,6 +5,7 @@
 The purpose of this project is to propose a solution for enterprises that use a unique centrale ePO server to manage all endpoints across the entire Group/Enterprise including subsidiaries and are looking to offer a point of data collection for subsidiaries SIEM/SOC. While most of SIEMs are establishing a direct connection to ePO or its database or while ePO can redirect all events to a Syslog receiver, it forces each subsidiary to get a view/access to logs from all subsidiaries.<br>
 I'm proposing a "Pull Request" approach through ePO WebAPI based on ePO User Account to filter/limit log access to only the scope that each subsidiary is participating/acting to.
 
+![](./img/epo-management.png)
 TO DO: Include a graphic to illustrate the current concept
 
 ## Designing the Threat Event query
@@ -21,23 +22,23 @@ Choose the table "Chart Type", then click "Next".
 ![](./img/epo-create-query-03.png)
 Then add all columns available from Threat Events. I like to add also the Assignement Path in this query because based on the ePO System Tree, the location of the system within the tree could definitely helps to understand the event or identify the targeted system.
 
-| Included columns in the query:                                             |||
-| ----------------------- | ----------------- | ----------------- |
-| ThreatActionTaken       | DetectedUTC       | SourceURL         |
-| AgentGUID               | ThreatEventID     | SourceUserName    |
-| AnalyzerDetectionMethod | ReceivedUTC       | TargetFileName    |
-| AnalyzerDATVersion      | EventTimeLocal    | TargetHostName    |
-| Analyzer                | ServerID          | TargetIPV6        |
-| AnalyzerHostName        | ThreatHandled     | TargetIPV4        |
-| AnalyzerIPV6            | ThreatName        | TargetMAC         |
-| AnalyzerIPV4            | ThreatSeverity    | TargetProtocol    |
-| AnalyzerMAC             | SourceHostName    | TargetPort        |
-| AnalyzerName            | SourceIPV6        | TargetProcessName |
-| AnalyzerVersion         | SourceIPV4        | TargetUserName    |
-| AnalyzerEngineVersion   | SourceMAC         | ThreatType        |
-| ThreatCategory          | SourceProcessName | AssignementPath*  |
+| Included columns in the query:                                                             |||
+| ------------------------------ | -------------------------- | ------------------------------ |
+| Action Taken                   | Event Generated Time       | Threat Source URL              |
+| Agent GUID                     | Event ID                   | Threat Source User Name        |
+| Analyzer Detection Method      | Event Received Time        | Threat Target File Path        |
+| DATVersion                     | Preferred Event Time       | Threat Target Host Name        |
+| Detecting Product ID           | Server ID                  | Threat Target IP Address       |
+| Detecting Product Host Name    | Threat Handled             | Threat Target IPV4 Address     |
+| Detecting Product IP Address   | Threat Name                | Threat Target MAC Address      |
+| Detecting Product IPV4 Address | Threat Severity            | Threat Target Network Protocol |
+| Detecting Product MAC Address  | Threat Source Host Name    | Threat Target Port Number      |
+| Detecting Product Name         | Threat Source IP Address   | Threat Target Process Name     |
+| Detecting Product Version      | Threat Source IPV4 Address | Threat Target User Name        |
+| Engine Version                 | Threat Source MAC Address  | Threat Type                    |
+| Event Category                 | Threat Source Process Name | Assignement Path*              |
 
-*Note:* Assignement Path is coded as "EPOBranchNode.NodeTextPath2".
+*Note:* Assignement Path is coded as "EPOBranchNode.NodeTextPath2".<br>
 
 ![](./img/epo-create-query-04.png)
 As the goal is to run the pull events request every hour, here I'm filtering the events based on the last full received hour. (I'm not using the Event Generated Time because the agent may not present today and will report their events the day after, so if you don't want to miss events, you need to work based on the Event Received Time.)<br>
@@ -45,7 +46,7 @@ You can adapt the filter based on your needs (i.e: last 5 minutes or last day.) 
 
 ![](./img/epo-create-query-05.png)
 Enter the name and description you want for this query and click "Save".
-
+<br>
 I also built another query where I  added the "Targeted File Hash' reported in the case of the ENS detection. Feel free to add any columns that could add value to your SIEM based on your needs. Then I decided to save those queries in a "Shared Group" that I plan to use in a dedicated Permission Set.
 
 ![](./img/epo-shared-queries.png)
@@ -53,7 +54,7 @@ I also built another query where I  added the "Targeted File Hash' reported in t
 ## Provisionning Accounts and Permission Sets
 Permission Set will allow ePO Administrator to set a hard-coded filter on the execution of the query by each subsidiary.
 
-![](./img/epo-system-tree.png)
+![](./img/epo-system-tree2.png)
 
 Define a new ePO user and permission set per subsidiary with the following permissions:
 - **Queries and Reports:** Use public groups, and these shared groups: Threat Events.
@@ -61,12 +62,50 @@ Define a new ePO user and permission set per subsidiary with the following permi
 - **System Tree access:**  Can search on the following nodes and parts of the System Tree:*The-subsidary-folder*
 - **Threat Event Log:** View events 
  
-<br>TO DO: Add an ePO example of Permission Set with the indicated permissions as an illustration.<br><br>
+![](./img/epo-permission-set.png)
 
 **Note:** The on-demand creation or the provisioning of all users and permission sets can be done through the WebAPI also. (That script is not part of the current project).
 
 ## Pull Request the Threat Events though the API
-Use the script to pull event every hours.<br>
-Here the script is saving "pulled events" in a simple file. You can adapt that script the save event in a syslog stream instead and configure the syslogd to forward those events to a syslog receiver from your SIEM.
+Use the Python script "[get_events.py](./get_events.py)" to pull events every hours, based on the query defined earlier.
 
-<br>TO DO: Add a json sample file with pulle devents.
+![](./img/sequence-diagram.png)
+
+[//]: # (Sequence Generator: https://bramp.github.io/js-sequence-diagrams/)
+[//]: # (participant get_events.py)
+[//]: # (participant Local File)
+[//]: # (participant ePO Server)
+[//]: # (get_events.py->ePO Server: core.executeQuery)
+[//]: # (Note over ePO Server: Execute query based\n on Permission Set)
+[//]: # (ePO Server->get_events.py: events.json)
+[//]: # (Note over get_events.py: Write events)
+[//]: # (get_events.py->Local File: json.dump)
+
+Here the script is saving "pulled events" in a simple file. You can read the sample file "[events-sample.json](./events-sample.json)" grabbed from my testing lab with five events from McAfee Endpoint Security Threat Prevention and Adaptive Threat Prevention.
+
+You can adapt that script the save event in a syslog stream instead and configure the syslogd to forward those events to a syslog receiver from your SIEM infrastructure.
+
+![](./img/sequence-diagram-syslog.png)
+
+[//]: # (Sequence Generator: https://bramp.github.io/js-sequence-diagrams/)
+[//]: # (participant get_events.py)
+[//]: # (participant syslogd)
+[//]: # (participant ePO Server)
+[//]: # (participant SIEM Rcv)
+[//]: # (participant Syslog Rcv)
+[//]: # (get_events.py->ePO Server: core.executeQuery)
+[//]: # (Note over ePO Server: Execute query based\n on Permission Set)
+[//]: # (ePO Server->get_events.py: events.json)
+[//]: # (Note over get_events.py: Write events)
+[//]: # (get_events.py->syslogd: json.dump)
+[//]: # (Note over syslogd: Syslog forward)
+[//]: # (syslogd->Syslog Rcv: Threat event A)
+[//]: # (Syslog Rcv-> SIEM Rcv: push.event)
+[//]: # (syslogd->Syslog Rcv: Threat event B)
+[//]: # (Syslog Rcv-> SIEM Rcv: push.event)
+[//]: # (syslogd->Syslog Rcv: Threat event ...)
+[//]: # (Syslog Rcv-> SIEM Rcv: push.event)
+
+I'm not going to cover the syslog forwarder in this project. If you want to do so I strongly recommand you to have a look at the [McAfee GitHub for McAfee MVISION EDR](https://github.com/mcafee/mvision-edr-activity-feed).
+
+[//]: # (Benjamin Marandel - 2020-09-04)
